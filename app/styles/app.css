@@ -1,0 +1,35 @@
+.board {
+  width: 150px;
+  height: 150px;
+  margin: 100px auto;
+  border: 1px solid #ccc;
+}
+
+.board.disabled {
+  border: 2px solid #555;
+}
+
+.board.winner {
+  border: 2px solid yellow;
+}
+
+
+.square {
+  width: 48px;
+  height: 48px;
+  border: 1px solid #ccc;
+  text-align: center;
+  line-height: 50px;
+  vertical-align: middle;
+  font-size: 30px;
+  display: block;
+  float: left;
+}
+
+.square:hover {
+  background-color: lightgreen;
+}
+
+.board.disabled .square:hover, .square.disabled:hover {
+  background-color: inherit;
+}

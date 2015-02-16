@@ -1,0 +1,6 @@
+XO
+
+- board 3x3
+- players
+- moves
+- win

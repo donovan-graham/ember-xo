@@ -1,0 +1,5 @@
+{{#each y in rows}}
+  {{#each x in cols}}
+    {{xo-square board=board moves=moves x=x y=y action="doMove"}}   
+  {{/each}}
+{{/each}}
