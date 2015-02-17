@@ -1,0 +1,15 @@
+
+{{#if activeGame}}
+  {{xo-board game=activeGame}}
+{{else}}
+  
+  <ul>
+    {{#each game in pendingGame}}
+      <li>{{game.createdAt}} [{{game.status}}]</li>
+    {{/each}}
+  </ul>
+
+  <button {{action "doNewGame"}}>New Game</button>
+{{/if}}
+
+{{outlet}}

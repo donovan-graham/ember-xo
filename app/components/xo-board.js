@@ -105,7 +105,7 @@ export default Ember.Component.extend({
       var move = Ember.Object.create({
         x: x,
         y: y,
-        marker: this.get('currentMarker')
+        mark: this.get('currentMarker')
       });
       
       this.get('moves').addObject(move);

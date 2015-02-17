@@ -18,15 +18,15 @@ export default Ember.Component.extend({
     return "sq.%@1.%@2".fmt(this.get('x'), this.get('y'));
   }.property('x', 'y'),
 
-  marker: function () {
+  mark: function () {
     return this.get('board')[this.get('y')][this.get('x')];
   }.property('moveCount'),
   
-  isDisabled: Ember.computed.notEmpty('marker'),
+  isDisabled: Ember.computed.notEmpty('mark'),
 
   // isDisabled: function() {
-  //   return !Ember.isEmpty(this.get('marker'));
-  // }.property('hasEnded', 'marker'),
+  //   return !Ember.isEmpty(this.get('mark'));
+  // }.property('hasEnded', 'mark'),
   // isCross: Ember.computed.equal('played', 'x'),
   // isNought: Ember.computed.equal('played', 'o'),
   // isDisabled: Ember.computed.or('isCross', 'isNought'),
