@@ -6,8 +6,9 @@ export default Ember.Component.extend({
   classNames: ['board'],
   classNameBindings: ['hasEnded:disabled', 'hasWinner:winner'],
 
-  board: null,    // {}
-  moves: null,    // []
+  board: null,    // {} state
+  moves: null,    // [] history
+
   rows: null,     // []
   cols: null,     // []
 
@@ -16,8 +17,9 @@ export default Ember.Component.extend({
     this.setProperties({
       moves: [],
       board: { 1 : { 1 : null, 2: null, 3: null }, 2 : { 1 : null, 2: null, 3: null }, 3 : { 1 : null, 2: null, 3: null }},
-      rows: [1,2,3,],
-      cols: [1,2,3,],
+
+      rows: [1,2,3,], // 3 x 3
+      cols: [1,2,3,], // 3 x 3
     });
   },
 
@@ -25,9 +27,11 @@ export default Ember.Component.extend({
     this.resetBaord();
   }.on('init'),
 
+  moveCount: Ember.computed.alias('moves.length'),
+
   currentMarker: function() {
-    return (this.get('moves.length') % 2 === 0) ? 'x' : 'o'; 
-  }.property('moves.length'),
+    return (this.get('moveCount') % 2 === 0) ? 'x' : 'o'; 
+  }.property('moveCount'),
 
   isPlayerOne: Ember.computed.equal('currentMarker', 'x'),
   isPlayerTwo: Ember.computed.equal('currentMarker', 'o'),
@@ -86,11 +90,11 @@ export default Ember.Component.extend({
     // }
     return false;      
 
-  }.property('moves.length'),
+  }.property('moveCount'),
 
   hasEnded: function() {
-    return this.get('hasWinner') || this.get('moves.length') === 9;
-  }.property('hasWinner', 'moves.length'),
+    return this.get('hasWinner') || this.get('moveCount') === 9;
+  }.property('hasWinner', 'moveCount'),
 
 
   actions: {

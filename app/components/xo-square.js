@@ -10,17 +10,17 @@ export default Ember.Component.extend({
   action: null,
   x: null,
   y: null,
-  board: null,    // {}
-  moves: null,    // []
+  
+  board: null,    // {}  
+  moveCount: 0,
 
   dataId: function() {
     return "sq.%@1.%@2".fmt(this.get('x'), this.get('y'));
   }.property('x', 'y'),
 
   marker: function () {
-    // we watch moves to let us know that somethings changed on the board state
     return this.get('board')[this.get('y')][this.get('x')];
-  }.property('moves.length'),
+  }.property('moveCount'),
   
   isDisabled: Ember.computed.notEmpty('marker'),
 
