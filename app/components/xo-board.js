@@ -1,13 +1,19 @@
 import Ember from 'ember';
 
+var Promise = Ember.RSVP.Promise;
 
 export default Ember.Component.extend({
 
   classNames: ['board'],
   classNameBindings: ['hasEnded:disabled', 'hasWinner:winner'],
 
+  game: null,
+
   board: null,    // {} state
-  moves: null,    // [] history
+
+  moves: Ember.computed.alias('game.moves'),
+  moveCount: Ember.computed.alias('moves.length'),
+  // moves: null,    // [] history
 
   rows: null,     // []
   cols: null,     // []
@@ -15,7 +21,7 @@ export default Ember.Component.extend({
 
   resetBaord: function() {
     this.setProperties({
-      moves: [],
+      // moves: [],
       board: { 1 : { 1 : null, 2: null, 3: null }, 2 : { 1 : null, 2: null, 3: null }, 3 : { 1 : null, 2: null, 3: null }},
 
       rows: [1,2,3,], // 3 x 3
@@ -27,7 +33,7 @@ export default Ember.Component.extend({
     this.resetBaord();
   }.on('init'),
 
-  moveCount: Ember.computed.alias('moves.length'),
+
 
   currentMarker: function() {
     return (this.get('moveCount') % 2 === 0) ? 'x' : 'o'; 
@@ -37,6 +43,9 @@ export default Ember.Component.extend({
   isPlayerTwo: Ember.computed.equal('currentMarker', 'o'),
 
   hasWinner: function() {
+
+    console.log(">> hasWinner:", this.get('moveCount'));
+
     var board = this.get('board');
     var check;
 
@@ -92,26 +101,77 @@ export default Ember.Component.extend({
 
   }.property('moveCount'),
 
+  // observeHasWinner: function() {
+  //   console.log(">> observeHasWinner");
+  //   if (this.get('hasWinner') === true) {
+  //     this.send('doGameWon');
+  //   }
+  // }.observes('hasWinner'),
+
+
   hasEnded: function() {
     return this.get('hasWinner') || this.get('moveCount') === 9;
   }.property('hasWinner', 'moveCount'),
 
 
+  isProcessing: false,
+
   actions: {
     doMove: function (x, y) {
-      if (this.get('hasEnded')) { return; }
-      this.get('board')[y][x] = this.get('currentMarker');
+      if (this.get('isProcessing') || this.get('hasEnded')) { return; }
+      this.set('isProcessing', true);
 
-      var move = Ember.Object.create({
+      var mark = this.get('currentMarker');      
+      var game = this.get('game');
+      var _this = this;
+
+      this.get('board')[y][x] = mark;
+
+      var store = this.container.lookup('store:main');
+
+      var move = store.createRecord('move', {
         x: x,
         y: y,
-        mark: this.get('currentMarker')
+        mark: mark
       });
-      
-      this.get('moves').addObject(move);
+
+      move.save().then(function() {
+        Promise.cast(game.get('moves')).then(function(moves) {
+          moves.addObject(move);
+          game.save().then(function() {
+            _this.set('isProcessing', false);
+          });
+        });
+      });
     }, 
 
+    doGameWon: function() {
+      console.log('doGameWon');
+
+      this.set('isProcessing', true);
+
+      var _this = this;
+      var game = this.get('game');
+      game.set('status', 'won').save().then(function() {
+        this.set('isProcessing', false); 
+      });
+    },
+    
+    doGameEnded: function() {
+      console.log('doGameEnded');
+
+      var _this = this;
+      var game = this.get('game');
+      game.set('status', 'ended').save().then(function() {
+        this.set('isProcessing', false); 
+      });
+    },
+
+
+
+
     resetGame: function() {
+      if (this.get('isProcessing') || this.get('hasEnded')) { return; }
       this.resetBaord();
     }
 

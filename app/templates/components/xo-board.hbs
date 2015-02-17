@@ -3,3 +3,9 @@
     {{xo-square board=board moveCount=moveCount x=x y=y action="doMove"}}   
   {{/each}}
 {{/each}}
+
+<ul>
+  {{#each move in moves}}
+    <li>{{move.x}}:{{move.y}}:{{move.mark}}</li>
+  {{/each}}
+</ul>

@@ -1,22 +1,43 @@
 import Ember from 'ember';
 
+
 export default Ember.Controller.extend({
 
-
   pendingGames: Ember.computed.alias('content'),
-
   activeGame: null,
-  
+  isProcessing: false,
 
   actions: {
     doNewGame: function() {
+      if (this.get('isProcessing')) { return; }
+      this.set('isProcessing', true);
+
       var _this = this;
       this.store.createRecord('game').save().then(function(game) {
-        _this.set('activeGame', game);
+        _this.setProperties({
+          activeGame: game,
+          isProcessing: false
+        });
+      });
+    },
+
+    doCancelGame: function() {
+      if (this.get('isProcessing')) { return; }      
+      this.set('isProcessing', true);
+
+      var _this = this;
+      this.get('activeGame').set('status', 'canceled').save().then(function(game) {
+        _this.setProperties({
+          activeGame: null,
+          isProcessing: false
+        });
       });
     }
   } 
+  
 
+  // var Promise = Ember.RSVP.Promise;
+  
   // App.PostController = Ember.ObjectController.extend({
   //     actions: {
   //       publishComment: function(post, comment) {

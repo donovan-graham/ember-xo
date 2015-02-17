@@ -11,9 +11,9 @@ export default DS.FirebaseAdapter.extend({
   firebase: new window.Firebase('https://' + ENV.firebase + '.firebaseio.com'),
 
 
-  pathForType: function(type) {
-    return Ember.String.pluralize(Ember.String.underscore(Ember.String.decamelize(type)));
-  },
+  // pathForType: function(type) {
+  //   return Ember.String.pluralize(Ember.String.underscore(Ember.String.decamelize(type)));
+  // },
 
   /* Override back to .on method instead of .once, because .once fetches data twice */
   findAll: function(store, type) {

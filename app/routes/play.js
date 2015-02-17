@@ -6,7 +6,7 @@ export default Ember.Route.extend({
     var query = {
       orderBy: 'status',
       equalTo: 'pending',
-    }
+    };
     return this.store.find('game', query);
   }
 

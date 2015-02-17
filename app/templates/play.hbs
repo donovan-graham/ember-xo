@@ -1,15 +1,18 @@
 
 {{#if activeGame}}
   {{xo-board game=activeGame}}
+
+  <button {{action "doCancelGame"}} {{bind-attr disabled=isProcessing}}>Cancel Game</button>
+
 {{else}}
   
   <ul>
-    {{#each game in pendingGame}}
-      <li>{{game.createdAt}} [{{game.status}}]</li>
+    {{#each game in pendingGames}}
+      <li>{{game.created_at}} [{{game.status}}]</li>
     {{/each}}
   </ul>
 
-  <button {{action "doNewGame"}}>New Game</button>
+  <button {{action "doNewGame"}} {{bind-attr disabled=isProcessing}}>New Game</button>
 {{/if}}
 
 {{outlet}}
